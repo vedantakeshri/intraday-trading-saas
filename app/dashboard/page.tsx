@@ -1,139 +1,78 @@
-// "use client";
-
-// import PositionsTable from "../componets/dashboard/PositionsTable";
-// import RiskPanel from "../componets/dashboard/RiskPanel";
-// import StatsCards from "../componets/dashboard/StatsCards";
-// import Topbar from "../componets/dashboard/Topbar";
-// import TradingSection from "../componets/dashboard/TradingSection";
-// import Watchlist from "../componets/dashboard/Watchlist";
-
-
-
-// export default function DashboardPage() {
-//   return (
-//     <div className="min-h-screen bg-gray-950 text-white">
-//       <Topbar />
-
-//       <main className="p-6 space-y-6">
-//         <StatsCards />
-//          <TradingSection />
-
-//         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-//           <PositionsTable />
-//           <div className="space-y-6">
-//             <Watchlist />
-//             <RiskPanel />
-//           </div>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-// "use client";
-
-// import { useState } from "react";
-// import Topbar from "../componets/dashboard/Topbar";
-// import Sidebar from "../componets/dashboard/Sidebar";
-// import StatsCards from "../componets/dashboard/StatsCards";
-// import TradingSection from "../componets/dashboard/TradingSection";
-// import PositionsTable from "../componets/dashboard/PositionsTable";
-// import Watchlist from "../componets/dashboard/Watchlist";
-// import RiskPanel from "../componets/dashboard/RiskPanel";
-
-
-
-// export default function DashboardPage() {
-//   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-//   return (
-//     <div className="bg-gray-950 text-white">
-//       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-
-//       {/* Main Content */}
-//       <div
-//         className={`min-h-screen transition-all duration-300
-//         ${sidebarOpen ? "ml-64" : "ml-16"}`}
-//       >
-//         <Topbar />
-
-//         <main className="p-6 space-y-6">
-//           <StatsCards />
-//           <TradingSection />
-
-//           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-//             <PositionsTable />
-//             <div className="space-y-6">
-//               <Watchlist />
-//               <RiskPanel />
-//             </div>
-//           </div>
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import Sidebar from "../componets/dashboard/Sidebar";
 import Topbar from "../componets/dashboard/Topbar";
-import TimeFilter from "../componets/dashboard/TimeFilter";
 import StatsCards from "../componets/dashboard/StatsCards";
 import TradingSection from "../componets/dashboard/TradingSection";
-import PositionsTable from "../componets/dashboard/PositionsTable";
-import Watchlist from "../componets/dashboard/Watchlist";
 import RiskPanel from "../componets/dashboard/RiskPanel";
-
+import Watchlist from "../componets/dashboard/Watchlist";
 
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [range, setRange] = useState<"today" | "week" | "month">("today");
+  const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
+
+  // ✅ Protect Route
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      router.push("/login");
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  // ✅ Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    router.push("/login");
+  };
+
+  // ✅ Prevent flicker before auth check
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white">
+        Checking authentication...
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-gray-950 text-white min-h-screen">
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+    <div className="min-h-screen text-white bg-gradient-to-br from-[#0b0f1a] via-[#0d1320] to-[#05070d]">
+      
+      {/* <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} /> */}
+      <Sidebar />
 
       <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
-        <Topbar />
+        
+        {/* Pass logout to Topbar */}
+        <Topbar onLogout={handleLogout} />
 
-        <main className="p-6 space-y-6">
-          {/* 🔥 HEADER ROW */}
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold">Dashboard</h1>
-            <TimeFilter value={range} onChange={setRange} />
-          </div>
-
-          {/* DATA SECTIONS */}
-          <StatsCards range={range} />
+        <main className="p-6 space-y-6 max-w-[1400px] mx-auto">
+          
+          <StatsCards />
           <TradingSection />
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            
             <div className="xl:col-span-2">
-              <PositionsTable range={range} />
+              <div className="bg-[#0f172a]/60 border border-white/10 rounded-xl p-4">
+                <h2 className="text-lg font-semibold mb-4">Open Positions</h2>
+                <p className="text-gray-400">No positions yet</p>
+              </div>
             </div>
+
             <div className="space-y-6">
               <Watchlist />
               <RiskPanel />
             </div>
+
           </div>
         </main>
       </div>

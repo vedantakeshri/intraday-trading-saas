@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,30 +32,35 @@ export default function Page() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
 
     setLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
+      // ✅ Store fake token
+      localStorage.setItem("authToken", "demo-token");
+
       setLoading(false);
-      alert("Login successful (mock)");
-    }, 1500);
+
+      // ✅ Redirect to dashboard
+      router.push("/dashboard");
+    }, 1000);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
       <div className="w-full max-w-md bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-800">
-
+        
         <h1 className="text-2xl font-bold text-center mb-2">Intraday SaaS</h1>
         <p className="text-gray-400 text-center mb-6">
           Secure login to your account
         </p>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
+          
           {/* Email */}
           <div>
             <label className="block text-sm mb-1">Email</label>

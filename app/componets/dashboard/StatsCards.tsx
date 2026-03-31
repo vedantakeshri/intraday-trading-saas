@@ -1,69 +1,31 @@
-import StatCard from "./StatCard";
-
-/* ---------------- TYPES ---------------- */
-type TimeRange = "today" | "week" | "month";
-
-type StatType =
-  | "pnl"
-  | "openTrades"
-  | "closedTrades"
-  | "capital"
-  | "margin"
-  | "winrate";
-
-/* ---------------- DATA ---------------- */
-const statsData: Record<
-  TimeRange,
-  {
-    title: string;
-    value: string;
-    type: StatType;
-    positive?: boolean;
-  }[]
-> = {
-  today: [
-    { title: "Today's P&L", value: "+₹2,450", type: "pnl", positive: true },
-    { title: "Open Trades", value: "3", type: "openTrades" },
-    { title: "Closed Trades", value: "2", type: "closedTrades" },
-    { title: "Capital Used", value: "₹45,000", type: "capital" },
-    { title: "Available Margin", value: "₹55,000", type: "margin" },
-    { title: "Win Rate", value: "60%", type: "winrate" },
-  ],
-
-  week: [
-    { title: "Weekly P&L", value: "+₹8,920", type: "pnl", positive: true },
-    { title: "Open Trades", value: "5", type: "openTrades" },
-    { title: "Closed Trades", value: "18", type: "closedTrades" },
-    { title: "Capital Used", value: "₹60,000", type: "capital" },
-    { title: "Available Margin", value: "₹40,000", type: "margin" },
-    { title: "Win Rate", value: "64%", type: "winrate" },
-  ],
-
-  month: [
-    { title: "Monthly P&L", value: "+₹18,340", type: "pnl", positive: true },
-    { title: "Open Trades", value: "2", type: "openTrades" },
-    { title: "Closed Trades", value: "85", type: "closedTrades" },
-    { title: "Capital Used", value: "₹75,000", type: "capital" },
-    { title: "Available Margin", value: "₹25,000", type: "margin" },
-    { title: "Win Rate", value: "68%", type: "winrate" },
-  ],
-};
-
-/* ---------------- COMPONENT ---------------- */
-export default function StatsCards({ range }: { range: TimeRange }) {
-  const stats = statsData[range];
+export default function StatsCards() {
+  const card =
+    "bg-[#0f172a]/60 border border-white/10 rounded-xl p-5";
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-      {stats.map((stat) => (
-        <StatCard
-          key={stat.title}
-          title={stat.title}
-          value={stat.value}
-          type={stat.type}
-          positive={stat.positive}
-        />
-      ))}
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      
+      <div className={card}>
+        <p className="text-gray-400 text-sm">Today's P&L</p>
+        <h2 className="text-2xl font-bold text-green-400">+₹13,753</h2>
+        <p className="text-xs text-gray-500">+2.41% on capital</p>
+      </div>
+
+      <div className={card}>
+        <p className="text-gray-400 text-sm">Open Positions</p>
+        <h2 className="text-2xl font-bold">2</h2>
+      </div>
+
+      <div className={card}>
+        <p className="text-gray-400 text-sm">Trades Today</p>
+        <h2 className="text-2xl font-bold text-yellow-400">7</h2>
+      </div>
+
+      <div className={card}>
+        <p className="text-gray-400 text-sm">Available Margin</p>
+        <h2 className="text-2xl font-bold text-blue-400">₹1,94,520</h2>
+      </div>
+
     </div>
   );
 }
