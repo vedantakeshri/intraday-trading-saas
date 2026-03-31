@@ -89,7 +89,9 @@ export default function OrdersPage() {
           <tbody>
             {filteredOrders.map((order) => (
               <tr
+                // key={order.id}
                 key={order.id}
+
                 className="border-t border-gray-800 hover:bg-gray-800/40 transition"
               >
                 <td className="px-4 py-3 font-medium">{order.id}</td>
