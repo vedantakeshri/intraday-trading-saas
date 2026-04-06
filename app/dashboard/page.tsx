@@ -10,6 +10,9 @@ import StatsCards from "../componets/dashboard/StatsCards";
 import TradingSection from "../componets/dashboard/TradingSection";
 import RiskPanel from "../componets/dashboard/RiskPanel";
 import Watchlist from "../componets/dashboard/Watchlist";
+import OpenPositions from "../componets/dashboard/OpenPositions";
+
+
 
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -62,14 +65,16 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             
             <div className="xl:col-span-2">
-              <div className="bg-[#0f172a]/60 border border-white/10 rounded-xl p-4">
-                <h2 className="text-lg font-semibold mb-4">Open Positions</h2>
-                <p className="text-gray-400">No positions yet</p>
-              </div>
+
+            <OpenPositions />
+
             </div>
+
+            {/* <OpenPositions /> */}
 
             <div className="space-y-6">
               <Watchlist />
+              {/* <h2>order</h2> */}
               <RiskPanel />
             </div>
 

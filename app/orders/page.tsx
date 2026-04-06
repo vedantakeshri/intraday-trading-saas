@@ -1,187 +1,207 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import Sidebar from "../componets/dashboard/Sidebar";
+import Topbar from "../componets/dashboard/Topbar";
+import { useRouter } from "next/navigation";
 
-const orders = [
-  {
-    id: "ORD-1021",
-    symbol: "RELIANCE",
-    type: "BUY",
-    qty: 10,
-    price: 2460,
-    status: "Completed",
-    time: "09:45 AM",
-  },
-  {
-    id: "ORD-1022",
-    symbol: "TCS",
-    type: "SELL",
-    qty: 5,
-    price: 3890,
-    status: "Pending",
-    time: "10:12 AM",
-  },
-  {
-    id: "ORD-1023",
-    symbol: "INFY",
-    type: "BUY",
-    qty: 20,
-    price: 1520,
-    status: "Rejected",
-    time: "10:40 AM",
-  },
-];
+type Order = {
+  id: number;
+  symbol: string;
+  type: "Market" | "Limit";
+  side: "BUY" | "SELL";
+  qty: number;
+  price: number;
+  status: "OPEN" | "CLOSED";
+  pnl: number;
+};
 
 export default function OrdersPage() {
-  const [statusFilter, setStatusFilter] = useState("All");
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const filteredOrders =
-    statusFilter === "All"
-      ? orders
-      : orders.filter((o) => o.status === statusFilter);
 
-  return (
-    <div className="space-y-6">
-      {/* HEADER */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Orders</h1>
-          <p className="text-sm text-gray-400">
-            Track and manage your executed & pending orders
-          </p>
-        </div>
-
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-sm"
-        >
-          <option>All</option>
-          <option>Completed</option>
-          <option>Pending</option>
-          <option>Rejected</option>
-        </select>
-      </div>
-
-      {/* STATS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard title="Total Orders" value="128" />
-        <StatCard title="Completed" value="96" success />
-        <StatCard title="Pending" value="12" warning />
-      </div>
-
-      {/* TABLE */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-800/50 text-gray-400">
-            <tr>
-              <th className="px-4 py-3 text-left">Order ID</th>
-              <th className="px-4 py-3 text-left">Symbol</th>
-              <th className="px-4 py-3 text-left">Type</th>
-              <th className="px-4 py-3 text-left">Qty</th>
-              <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-left">Time</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {filteredOrders.map((order) => (
-              <tr
-                // key={order.id}
-                key={order.id}
-
-                className="border-t border-gray-800 hover:bg-gray-800/40 transition"
-              >
-                <td className="px-4 py-3 font-medium">{order.id}</td>
-                <td className="px-4 py-3">{order.symbol}</td>
-
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex items-center gap-1 font-medium ${
-                      order.type === "BUY"
-                        ? "text-green-400"
-                        : "text-red-400"
-                    }`}
-                  >
-                    {order.type === "BUY" ? (
-                      <ArrowUpRight className="w-4 h-4" />
-                    ) : (
-                      <ArrowDownRight className="w-4 h-4" />
-                    )}
-                    {order.type}
-                  </span>
-                </td>
-
-                <td className="px-4 py-3">{order.qty}</td>
-                <td className="px-4 py-3">₹{order.price}</td>
-
-                <td className="px-4 py-3">
-                  <StatusBadge status={order.status} />
-                </td>
-
-                <td className="px-4 py-3 text-gray-400">{order.time}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {filteredOrders.length === 0 && (
-          <div className="p-6 text-center text-gray-400">
-            No orders found
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- COMPONENTS ---------------- */
-
-function StatCard({
-  title,
-  value,
-  success,
-  warning,
-}: {
-  title: string;
-  value: string;
-  success?: boolean;
-  warning?: boolean;
-}) {
-  return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-      <p className="text-sm text-gray-400">{title}</p>
-      <p
-        className={`text-2xl font-bold ${
-          success
-            ? "text-green-400"
-            : warning
-            ? "text-yellow-400"
-            : "text-white"
-        }`}
-      >
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    Completed: "bg-green-500/10 text-green-400",
-    Pending: "bg-yellow-500/10 text-yellow-400",
-    Rejected: "bg-red-500/10 text-red-400",
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    router.push("/login");
   };
 
+  const [filter, setFilter] = useState("ALL");
+
+  const orders: Order[] = [
+    {
+      id: 1,
+      symbol: "NIFTY",
+      type: "Market",
+      side: "BUY",
+      qty: 10,
+      price: 22000,
+      status: "CLOSED",
+      pnl: 500,
+    },
+    {
+      id: 2,
+      symbol: "BANKNIFTY",
+      type: "Limit",
+      side: "SELL",
+      qty: 5,
+      price: 46000,
+      status: "OPEN",
+      pnl: -200,
+    },
+    {
+      id: 3,
+      symbol: "TCS",
+      type: "Market",
+      side: "BUY",
+      qty: 2,
+      price: 3800,
+      status: "CLOSED",
+      pnl: 1200,
+    },
+  ];
+
+  const filteredOrders =
+    filter === "ALL"
+      ? orders
+      : orders.filter((o) => o.status === filter);
+
+  const totalPnL = orders.reduce((acc, o) => acc + o.pnl, 0);
+  const winRate =
+    (orders.filter((o) => o.pnl > 0).length / orders.length) * 100;
+
   return (
-    <span
-      className={`px-3 py-1 rounded-full text-xs font-medium ${
-        styles[status]
-      }`}
-    >
-      {status}
-    </span>
+    <div className=" h-screen bg-[#0b1220] text-white">
+
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main */}
+      {/* <div className="flex-1 flex flex-col"> */}
+      <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
+
+
+        {/* Topbar */}
+        <Topbar onLogout={handleLogout} />
+
+        {/* Content */}
+        <div className="p-6 space-y-6 overflow-y-auto">
+
+          {/* Header */}
+          <h2 className="text-2xl font-semibold">📊 Order History</h2>
+
+          {/* 🔥 Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+              <p className="text-sm text-gray-400">Total PnL</p>
+              <p
+                className={`text-xl font-bold ${
+                  totalPnL >= 0 ? "text-green-400" : "text-red-400"
+                }`}
+              >
+                ₹{totalPnL}
+              </p>
+            </div>
+
+            <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+              <p className="text-sm text-gray-400">Trades</p>
+              <p className="text-xl font-bold">{orders.length}</p>
+            </div>
+
+            <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+              <p className="text-sm text-gray-400">Win Rate</p>
+              <p className="text-xl font-bold text-blue-400">
+                {winRate.toFixed(0)}%
+              </p>
+            </div>
+          </div>
+
+          {/* 🔍 Filters */}
+          <div className="flex gap-3">
+            {["ALL", "OPEN", "CLOSED"].map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-1 rounded-full text-sm ${
+                  filter === f
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-800 text-gray-400"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+
+          {/* 📋 Table */}
+          <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+
+            <table className="w-full text-sm">
+              <thead className="bg-gray-800 text-gray-400">
+                <tr>
+                  <th className="p-3 text-left">Symbol</th>
+                  <th className="p-3">Type</th>
+                  <th className="p-3">Side</th>
+                  <th className="p-3">Qty</th>
+                  <th className="p-3">Price</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">PnL</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredOrders.map((o) => (
+                  <tr
+                    key={o.id}
+                    className="border-t border-white/5 hover:bg-white/5 transition"
+                  >
+                    <td className="p-3 font-medium">{o.symbol}</td>
+
+                    <td className="text-center">{o.type}</td>
+
+                    <td
+                      className={`text-center ${
+                        o.side === "BUY"
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {o.side}
+                    </td>
+
+                    <td className="text-center">{o.qty}</td>
+
+                    <td className="text-center">₹{o.price}</td>
+
+                    <td className="text-center">
+                      <span
+                        className={`px-2 py-1 rounded text-xs ${
+                          o.status === "OPEN"
+                            ? "bg-yellow-500/20 text-yellow-400"
+                            : "bg-green-500/20 text-green-400"
+                        }`}
+                      >
+                        {o.status}
+                      </span>
+                    </td>
+
+                    <td
+                      className={`text-center font-semibold ${
+                        o.pnl >= 0
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      ₹{o.pnl}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
