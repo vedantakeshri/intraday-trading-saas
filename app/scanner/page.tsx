@@ -40,29 +40,54 @@ const ScannerPage = () => {
   }, []);
 
   // 🤖 AI ENGINE
-  const getAISignal = (stock) => {
-    if (stock.change > 1 && stock.volume > 100000) {
-      return {
-        signal: "BUY",
-        confidence: 85,
-        reason: "Momentum breakout + volume spike",
-      };
-    }
+  // const getAISignal = (stock) => {
+  //   if (stock.change > 1 && stock.volume > 100000) {
+  //     return {
+  //       signal: "BUY",
+  //       confidence: 85,
+  //       reason: "Momentum breakout + volume spike",
+  //     };
+  //   }
 
-    if (stock.change < -1 && stock.volume > 90000) {
-      return {
-        signal: "SELL",
-        confidence: 80,
-        reason: "Heavy selling pressure",
-      };
-    }
+  //   if (stock.change < -1 && stock.volume > 90000) {
+  //     return {
+  //       signal: "SELL",
+  //       confidence: 80,
+  //       reason: "Heavy selling pressure",
+  //     };
+  //   }
 
+  //   return {
+  //     signal: "HOLD",
+  //     confidence: 60,
+  //     reason: "No clear trend",
+  //   };
+  // };
+
+
+  const getAISignal = (stock: Stock): AISignal => {
+  if (stock.change > 1 && stock.volume > 100000) {
     return {
-      signal: "HOLD",
-      confidence: 60,
-      reason: "No clear trend",
+      signal: "BUY",
+      confidence: 85,
+      reason: "Momentum breakout + volume spike",
     };
+  }
+
+  if (stock.change < -1 && stock.volume > 90000) {
+    return {
+      signal: "SELL",
+      confidence: 80,
+      reason: "Heavy selling pressure",
+    };
+  }
+
+  return {
+    signal: "HOLD",
+    confidence: 60,
+    reason: "No clear trend",
   };
+};
 
   // Filters
   const filtered = stocks.filter((stock) => {
