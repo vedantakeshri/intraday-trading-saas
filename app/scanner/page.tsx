@@ -11,6 +11,20 @@ const initialStocks = [
   { name: "HDFCBANK", price: 1650, change: -1.5, volume: 95000 },
 ];
 
+
+type Stock = {
+  name: string;
+  price: number;
+  change: number;
+  volume: number;
+};
+
+type AISignal = {
+  signal: "BUY" | "SELL" | "HOLD";
+  confidence: number;
+  reason: string;
+};
+
 const ScannerPage = () => {
   const [stocks, setStocks] = useState(initialStocks);
   const [search, setSearch] = useState("");
