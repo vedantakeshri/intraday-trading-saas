@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../componets/dashboard/Sidebar";
 import Topbar from "../componets/dashboard/Topbar";
+import { useRouter } from "next/navigation";
+
 
 const initialStocks = [
   { name: "RELIANCE", price: 2450, change: 1.2, volume: 120000 },
@@ -31,11 +33,19 @@ const ScannerPage = () => {
   const [aiOnly, setAiOnly] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
 
   // Simulated loading
   useEffect(() => {
     setTimeout(() => setLoading(false), 1200);
   }, []);
+
+
+    const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    router.push("/login");
+  };
 
   // 🔄 Live market simulation
   useEffect(() => {
@@ -123,7 +133,7 @@ const ScannerPage = () => {
       <Sidebar />
 
       <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
-        <Topbar />
+        <Topbar  onLogout={handleLogout} />
 
         <div className="p-6">
           {/* Heading */}
