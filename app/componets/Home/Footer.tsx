@@ -1,13 +1,7 @@
-import React from 'react'
-
-const Footer = () => {
+export default function Footer() {
   return (
-    <>
-      <footer className="px-8 py-6 border-t border-white/10 text-center text-sm text-gray-400">
-      © 2026 TradeFlow. Trading involves risk. No investment advice.
+    <footer className="py-10 text-center text-gray-500 border-t border-white/10">
+      © 2026 TradeFlow. All rights reserved.
     </footer>
-    </>
-  )
+  );
 }
-
-export default Footer
