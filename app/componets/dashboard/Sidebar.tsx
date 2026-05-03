@@ -48,12 +48,28 @@ const sections = [
   },
 ];
 
-export default function Sidebar() {
+type SidebarProps = {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+};
+
+export default function Sidebar({ open, setOpen }: SidebarProps) {
   const pathname = usePathname(); // 🔥 current route
   const router = useRouter(); // 🔥 navigation
 
   return (
-    <div className="fixed top-0 left-0 h-full w-64 bg-[#05070d]/90 backdrop-blur-xl border-r border-white/10 flex flex-col justify-between">
+<div
+  className={`
+    fixed top-0 left-0 h-full
+    w-[85%] sm:w-64
+    bg-[#05070d]/90 backdrop-blur-xl border-r border-white/10
+    flex flex-col justify-between z-50
+    transition-transform duration-300
+
+    ${open ? "translate-x-0" : "-translate-x-full"}
+    md:translate-x-0
+  `}
+>
       
       {/* 🔥 Top */}
       <div>

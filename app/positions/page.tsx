@@ -121,13 +121,16 @@ export default function PositionsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0b0f1a] via-[#0d1320] to-[#05070d] text-white">
-   <Sidebar />
+   <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}  />
 
       {/* 🔥 Main */}
-      <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
+      <div className="md:ml-64 transition-[margin] duration-300">
 
         {/* 🔥 Topbar */}
-        <Topbar onLogout={() => {}} />
+        <Topbar onLogout={() => {}}  
+           onMenuClick={() => setSidebarOpen(prev => !prev)}
+
+         />
 
         <main className="p-6 space-y-6 max-w-[1400px] mx-auto">
 
