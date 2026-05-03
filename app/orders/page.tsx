@@ -18,7 +18,8 @@ type Order = {
 
 export default function OrdersPage() {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false); // ✅ FIXED
+  
 
 
   const handleLogout = () => {
@@ -74,15 +75,20 @@ export default function OrdersPage() {
     <div className=" h-screen bg-[#0b1220] text-white">
 
       {/* Sidebar */}
-      <Sidebar />
+      {/* <Sidebar /> */}
+            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+      
 
       {/* Main */}
       {/* <div className="flex-1 flex flex-col"> */}
-      <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
+      <div className="md:ml-64 transition-[margin] duration-300">
 
 
         {/* Topbar */}
-        <Topbar onLogout={handleLogout} />
+        <Topbar onLogout={handleLogout}
+           onMenuClick={() => setSidebarOpen(prev => !prev)}
+        
+        />
 
         {/* Content */}
         <div className="p-6 space-y-6 overflow-y-auto">

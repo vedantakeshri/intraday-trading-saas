@@ -102,16 +102,19 @@ export default function AlertsPage() {
     <div className="h-screen bg-[#05070d] text-white ">
 
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
 
 
       {/* Main */}
       {/* <div className="flex-1 flex flex-col"> */}
-      <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
+      <div className="md:ml-64 transition-[margin] duration-300">
 
 
-        <Topbar onLogout={handleLogout} />
+        <Topbar onLogout={handleLogout}
+           onMenuClick={() => setSidebarOpen(prev => !prev)}
+        
+        />
 
         <main className="p-3 sm:p-4 md:p-6 space-y-6 max-w-[1400px] mx-auto w-full">
 

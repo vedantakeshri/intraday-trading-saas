@@ -43,7 +43,7 @@ export default function SettingsPage() {
   const router = useRouter();
 
   const [settings, setSettings] = useState<SettingsType>(defaultSettings);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 const [showToast, setShowToast] = useState(false);
   const [saved, setSaved] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -93,15 +93,19 @@ const [showToast, setShowToast] = useState(false);
     <div className="min-h-screen text-white bg-gradient-to-br from-[#0b0f1a] via-[#0d1320] to-[#05070d]">
       
       {/* Sidebar */}
-      <Sidebar />
+                  <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+      
 
       {/* Main Content */}
-      <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
+      <div className="md:ml-64 transition-[margin] duration-300">
 
       
       <div className="flex-1">
         
-        <Topbar onLogout={handleLogout} />
+        <Topbar onLogout={handleLogout}
+           onMenuClick={() => setSidebarOpen(prev => !prev)}
+
+         />
 
         <main className="p-6 space-y-6 max-w-[1400px] mx-auto">
 

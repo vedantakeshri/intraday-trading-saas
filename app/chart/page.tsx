@@ -12,6 +12,7 @@ import {
 
 export default function ChartPage() {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
+  
   const chartRef = useRef<any>(null);
   const seriesRef = useRef<any>(null);
 
@@ -19,7 +20,9 @@ export default function ChartPage() {
 
   const [symbol, setSymbol] = useState("NIFTY");
   const [timeframe, setTimeframe] = useState("1m");
-  const [sidebarOpen] = useState(true);
+  // const [sidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // ✅ FIXED
+
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -121,12 +124,15 @@ export default function ChartPage() {
   return (
     <div className="h-screen bg-gradient-to-br from-[#0b1220] to-black text-white">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}  />
 
       {/* Main */}
-      <div className={`${sidebarOpen ? "ml-64" : "ml-16"} transition-all`}>
+      <div className="md:ml-64 transition-[margin] duration-300">
         {/* Topbar */}
-        <Topbar onLogout={handleLogout} />
+        <Topbar onLogout={handleLogout}
+           onMenuClick={() => setSidebarOpen(prev => !prev)}
+        
+        />
 
         {/* Content */}
         <div className="p-6 space-y-6">
